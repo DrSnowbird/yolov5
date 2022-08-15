@@ -1,3 +1,29 @@
+# YOLOv5 🚀 by Ultralytics, GPL-3.0 license
+"""
+Run inference on images, videos, directories, streams, etc.
+
+Usage - sources:
+    $ python path/to/detect.py --weights yolov5s.pt --source 0              # webcam
+                                                             img.jpg        # image
+                                                             vid.mp4        # video
+                                                             path/          # directory
+                                                             path/*.jpg     # glob
+                                                             'https://youtu.be/Zgi9g1ksQHc'  # YouTube
+                                                             'rtsp://example.com/media.mp4'  # RTSP, RTMP, HTTP stream
+
+Usage - formats:
+    $ python path/to/detect.py --weights yolov5s.pt                 # PyTorch
+                                         yolov5s.torchscript        # TorchScript
+                                         yolov5s.onnx               # ONNX Runtime or OpenCV DNN with --dnn
+                                         yolov5s.xml                # OpenVINO
+                                         yolov5s.engine             # TensorRT
+                                         yolov5s.mlmodel            # CoreML (macOS-only)
+                                         yolov5s_saved_model        # TensorFlow SavedModel
+                                         yolov5s.pb                 # TensorFlow GraphDef
+                                         yolov5s.tflite             # TensorFlow Lite
+                                         yolov5s_edgetpu.tflite     # TensorFlow Edge TPU
+"""
+
 import argparse
 import os
 import platform
@@ -136,13 +162,14 @@ def run(
             # -- output: images: images (with bounding boxes)
             # save_path = str(save_dir / p.name)  # im.jpg
             save_path = str(save_dir / 'images' / relative_parent / p.name)  # img.jpg
+            # print(f">>>>>>>> ........detect_proc(): save_path: \n {save_path} \n")
             image_parent_directory = Path(str(save_dir / 'images' / relative_parent))
             image_parent_directory.mkdir(parents=True, exist_ok=True)
 
             # -- output: labels: file path name without '.txt' extension yet.
             # txt_path = str(save_dir / 'labels' / p.stem) + ('' if dataset.mode == 'image' else f'_{frame}')  # im.txt
-            txt_path = str(save_dir / 'labels' / relative_parent / p.stem) + (
-                '' if dataset.mode == 'image' else f'_{frame}')  # img.txt
+            txt_path = str(save_dir / 'labels' / relative_parent / p.stem) + ('' if dataset.mode == 'image' else f'_{frame}')  # img.txt
+            # print(f">>>>>>>> ........detect_proc(): txt_path: \n {txt_path} \n")
             text_parent_directory = Path(str(save_dir / 'labels' / relative_parent))
             text_parent_directory.mkdir(parents=True, exist_ok=True)
 
@@ -176,10 +203,7 @@ def run(
                         label = None if hide_labels else (names[c] if hide_conf else f'{names[c]} {conf:.2f}')
                         annotator.box_label(xyxy, label, color=colors(c, True))
                     if save_crop:
-                        save_one_box(xyxy,
-                                     imc,
-                                     file=str(save_dir / 'crops' / relative_parent / names[c] / f'{p.stem}.jpg'),
-                                     BGR=True)
+                        save_one_box(xyxy, imc, file=str(save_dir / 'crops' / relative_parent / names[c] / f'{p.stem}.jpg'), BGR=True)
                         #save_one_box(xyxy, imc, file=save_dir / 'crops' / names[c] / f'{p.stem}.jpg', BGR=True)
 
             # Stream results
